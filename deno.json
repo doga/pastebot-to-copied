@@ -1,0 +1,11 @@
+{
+  "imports": {
+    "args/": "https://deno.land/x/args@2.1.1/",
+    "xml/": "https://deno.land/x/xml/"
+  },
+  "tasks": {
+    "run": "deno run --allow-read text-formatters/generator.ts",
+    "help": "deno run --allow-read text-formatters/generator.ts --help",
+    "demo": "deno run --allow-read text-formatters/generator.ts --path tmp/'𝙼𝚘𝚗𝚘𝚜𝚙𝚊𝚌𝚎 • mathematical monospace.pastebotfilter' > tmp/'𝙼𝚘𝚗𝚘𝚜𝚙𝚊𝚌𝚎 • mathematical monospace.js'"
+  }
+}
