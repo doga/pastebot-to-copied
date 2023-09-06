@@ -77,7 +77,7 @@ async function toCopiedTextFormatter(pastebotFilterPath:string): Promise<string>
   }
   // console.debug(`Substitutions: ${JSON.stringify(substitutions)}`);
 
-  const copiedTextFormatter = 
+  const copiedTextFormatter = // BUG does not work for multiline placeholders or values
   `// Text formatter for Copied (https://docs.copied.app/)
 
   function canFormat(clipping) {
