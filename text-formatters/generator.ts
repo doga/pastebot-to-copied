@@ -1,7 +1,7 @@
 /**
  * Deno script for translating a Pastebot filter into a Copied text formatter (which is a javascript file).
  * - Pastebot: https://tapbots.com/pastebot/help/
- * - Copied:   https://docs.copied.app/
+ * - Copied:   https://docs.copied.app/#/../ios/settings?id=text-formatters 
  *
  * @license Apache-2.0
  * @author Doğa Armangil <doga.armangil@gmail.com>
@@ -54,6 +54,8 @@ const {path} = parsedArgs.value; // see https://github.com/KSXGitHub/deno-args/b
 
 // ♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎ Run ♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎
 
+// WARNING Don't transform characters into styled Unicode (such as mathematical bold), Copied will ignore those formatting commands.
+
 /**
  * Translate a given Pastebot filter into its Copied text formatter equivalent.
  *
@@ -78,21 +80,14 @@ async function toCopiedTextFormatter(pastebotFilterPath:string): Promise<string>
   // console.debug(`Substitutions: ${JSON.stringify(substitutions)}`);
 
   const copiedTextFormatter = // BUG does not work for multiline placeholders or values
-  `// Text formatter for Copied (https://docs.copied.app/)
-
-  function canFormat(clipping) {
-    return clipping.text != null;
-  }
-
-  function format(clipping) {
-    const formattedText = 
-    clipping.text
-    .trim()
-${substitutions.map( substitution => '    .replaceAll("'+substitution.from+'","'+substitution.to+'")' ).join("\n")};
-
-    return formattedText;
-  }
-  `;
+`function canFormat(clipping) {return clipping.text != null;}
+function format(clipping) {
+  const substitutions = [${substitutions.map( substitution => '["'+substitution.from+'","'+substitution.to+'"]' ).join(",")}];
+  let res = clipping.text.trim();
+  substitutions.forEach(s => res.replaceAll(s[0],s[1]));
+  return res;
+}
+`;
 
   return copiedTextFormatter;
 }
